@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="login.css" />
+    <title>Anime Watchlist</title>
+  </head>
+  <body>
+    <div class="wrapper login">
+      <div class="container">
+        <div class="col-left">
+          <div class="login-text">
+            <h2>Anime Watchlist</h2>
+            <p>Create your account.<br />For free!</p>
+            <a href="./index.html" class="btn">Sign Up</a>
+          </div>
+        </div>
+        <div class="col-right">
+          <div class="login-form">
+            <h2>Sign In</h2>
+            <form action="">
+              <p class="email-container">
+                <label>Email address<span>*</span></label>
+                <input
+                  type="text"
+                  placeholder="Email"
+                  id="signInEmail"
+                  required
+                />
+              </p>
+              <p class="email-validation" id="emailValidation"></p>
+              <p class="pw-container">
+                <label>Password<span>*</span></label>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  id="signInPassword"
+                  required
+                />
+              </p>
+              <p class="password-validation" id="pwValidation"></p>
+              <p>
+                <input type="submit" value="Sign In" id="loginBtn" />
+              </p>
+              <p>
+                <a href="">Forgot password?</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="login.js"></script>
+  </body>
+</html>
