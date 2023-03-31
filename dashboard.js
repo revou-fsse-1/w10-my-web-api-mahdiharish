@@ -186,21 +186,14 @@ function editData(index) {
   const seasonSelect = document.getElementById("seasonOptions");
   const yearSelect = document.getElementById("yearSelect");
   const statusSelect = document.getElementById("statusOptions");
-
-  // Populate input fields with data
   animeInput.value = data[index].anime;
   seasonSelect.value = data[index].season;
   yearSelect.value = data[index].year;
   statusSelect.value = data[index].status;
-
-  // Show input form
   const bodyContainer = document.querySelector(".body-container");
   bodyContainer.style.display = "block";
-
   const editDataBtn = document.getElementById("addData");
   editDataBtn.textContent = "Save Changes";
-
-  // Modify existing event listener
   editDataBtn.removeEventListener("click", addData);
   editDataBtn.addEventListener("click", async () => {
     try {
