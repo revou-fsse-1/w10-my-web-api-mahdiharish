@@ -181,35 +181,88 @@ async function addData() {
 document.getElementById("addData").addEventListener("click", addData);
 
 // EDIT DATA
-function editData(i) {
-  let namePrompt = prompt("Edit Name", data[i].name);
-  let emailPrompt = prompt("Edit Email", data[i].email);
-  let agePrompt = prompt("Edit Age", data[i].age);
-  if (
-    checkName(namePrompt) !== false &&
-    checkEmail(emailPrompt) !== false &&
-    checkAge(agePrompt) !== false
-  ) {
-    data[i].name = namePrompt;
-    data[i].email = emailPrompt;
-    data[i].age = agePrompt;
-    localStorage.setItem("data", JSON.stringify(data));
-    showData();
-  }
+function editData(index) {
+  const animeInput = document.getElementById("inputTitle");
+  const seasonSelect = document.getElementById("seasonOptions");
+  const yearSelect = document.getElementById("yearSelect");
+  const statusSelect = document.getElementById("statusOptions");
+
+  // Populate input fields with data
+  animeInput.value = data[index].anime;
+  seasonSelect.value = data[index].season;
+  yearSelect.value = data[index].year;
+  statusSelect.value = data[index].status;
+
+  // Show input form
+  const bodyContainer = document.querySelector(".body-container");
+  bodyContainer.style.display = "block";
+
+  const editDataBtn = document.getElementById("addData");
+  editDataBtn.textContent = "Save Changes";
+
+  // Modify existing event listener
+  editDataBtn.removeEventListener("click", addData);
+  editDataBtn.addEventListener("click", async () => {
+    try {
+      const updatedData = {
+        anime: animeInput.value,
+        season: seasonSelect.value,
+        year: yearSelect.value,
+        status: statusSelect.value,
+      };
+      const response = await fetch(
+        `https://642433294740174043359209.mockapi.io/animedb/${data[index].id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update data.");
+      }
+      data[index] = updatedData;
+      showData();
+    } catch (error) {
+      console.error(error);
+    }
+  });
 }
 
 // DELETE DATA
-function deleteData(i) {
-  data.splice(i, 1);
-  localStorage.setItem("data", JSON.stringify(data));
-  showData();
+async function deleteData(i) {
+  try {
+    const response = await fetch(
+      `https://642433294740174043359209.mockapi.io/animedb/${data[i].id}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to delete data.");
+    }
+    data.splice(i, 1);
+    showData();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-// SHOW DATA ON LOAD
-window.onload = function () {
-  let storedData = localStorage.getItem("data");
-  if (storedData !== null) {
-    data = JSON.parse(storedData);
+// // SHOW DATA ON LOAD
+window.onload = async function () {
+  try {
+    const response = await fetch(
+      "https://642433294740174043359209.mockapi.io/animedb"
+    );
+    if (!response.ok) {
+      throw new Error("Failed to load data.");
+    }
+    const apiData = await response.json();
+    data = apiData;
+    showData();
+  } catch (error) {
+    console.error(error);
   }
-  showData();
 };
