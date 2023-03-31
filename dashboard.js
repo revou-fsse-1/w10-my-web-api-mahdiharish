@@ -131,7 +131,7 @@ async function showData() {
         ")'>Edit</button>";
       row +=
         "<button class='delete' type='button' onclick='deleteData(" +
-        i +
+        data[i].id +
         ")'>Delete</button></td>";
       row += "</tr>";
       tableData.innerHTML += row;
@@ -234,10 +234,10 @@ function editData(index) {
 }
 
 // DELETE DATA
-async function deleteData(i) {
+async function deleteData(id) {
   try {
     const response = await fetch(
-      `https://642433294740174043359209.mockapi.io/animedb/${data[i].id}`,
+      `https://642433294740174043359209.mockapi.io/animedb/${id}`,
       {
         method: "DELETE",
       }
@@ -245,7 +245,6 @@ async function deleteData(i) {
     if (!response.ok) {
       throw new Error("Failed to delete data.");
     }
-    data.splice(i, 1);
     showData();
   } catch (error) {
     console.error(error);
