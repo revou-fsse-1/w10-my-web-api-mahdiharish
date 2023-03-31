@@ -50,6 +50,15 @@ document
 // YEAR VALIDATION
 const yearSelect = document.getElementById("yearSelect");
 const errorYear = document.getElementById("yearError");
+function checkYear() {
+  if (yearSelect.value === "") {
+    errorYear.style.display = "block";
+    return false;
+  } else {
+    errorYear.style.display = "none";
+    return true;
+  }
+}
 for (let year = 1970; year <= 2024; year++) {
   const option = document.createElement("option");
   option.value = year;
@@ -57,11 +66,7 @@ for (let year = 1970; year <= 2024; year++) {
   yearSelect.add(option);
 }
 yearSelect.addEventListener("change", () => {
-  if (yearSelect.value === "") {
-    errorYear.style.display = "block";
-  } else {
-    errorYear.style.display = "none";
-  }
+  checkYear();
 });
 
 // STATUS VALIDATION
@@ -106,38 +111,72 @@ let checkStatus = () => {
 document.getElementById("statusOptions").addEventListener("input", checkStatus);
 
 // SHOW DATA IN TABLE
-function showData() {
+async function showData() {
   let tableData = document.querySelector("#tableData tbody");
   tableData.innerHTML = "";
-  for (let i = 0; i < data.length; i++) {
-    let row = "<tr>";
-    row += "<td>" + data[i].anime + "</td>";
-    row += "<td>" + data[i].season + "</td>";
-    row += "<td>" + data[i].year + "</td>";
-    row += "<td>" + data[i].status + "</td>";
-    row +=
-      "<td><button class='edit' type='button' onclick='editData(" +
-      i +
-      ")'>Edit</button>";
-    row +=
-      "<button class='delete' type='button' onclick='deleteData(" +
-      i +
-      ")'>Delete</button></td>";
-    row += "</tr>";
-    tableData.innerHTML += row;
+  try {
+    const response = await fetch(
+      "https://642433294740174043359209.mockapi.io/animedb"
+    );
+    const data = await response.json();
+    for (let i = 0; i < data.length; i++) {
+      let row = "<tr>";
+      row += "<td>" + data[i].anime + "</td>";
+      row += "<td>" + data[i].season + "</td>";
+      row += "<td>" + data[i].year + "</td>";
+      row += "<td>" + data[i].status + "</td>";
+      row +=
+        "<td><button class='edit' type='button' onclick='editData(" +
+        i +
+        ")'>Edit</button>";
+      row +=
+        "<button class='delete' type='button' onclick='deleteData(" +
+        i +
+        ")'>Delete</button></td>";
+      row += "</tr>";
+      tableData.innerHTML += row;
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
 // ADD NEW DATA TO OBJECT
-function addData() {
-  let name = document.getElementById("inputName").value;
-  let email = document.getElementById("inputEmail").value;
-  let age = document.getElementById("inputAge").value;
-  if (checkName() !== false && checkEmail() !== false && checkAge() !== false) {
-    data.push({ name, email, age });
-    localStorage.setItem("data", JSON.stringify(data));
+async function addData() {
+  try {
+    let anime = document.getElementById("inputTitle").value;
+    let season = document.getElementById("seasonOptions").value;
+    let year = document.getElementById("yearSelect").value;
+    let status = document.getElementById("statusOptions").value;
+    if (
+      checkTitle() !== false &&
+      checkSeason() !== false &&
+      checkYear() !== false &&
+      checkStatus() !== false
+    ) {
+      const response = await fetch(
+        "https://642433294740174043359209.mockapi.io/animedb",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            anime,
+            season,
+            year,
+            status,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to add data to API");
+      }
+      showData();
+    }
+  } catch (error) {
+    console.error(error);
   }
-  showData();
 }
 document.getElementById("addData").addEventListener("click", addData);
 
