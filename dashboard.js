@@ -186,15 +186,20 @@ function editData(index) {
   const seasonSelect = document.getElementById("seasonOptions");
   const yearSelect = document.getElementById("yearSelect");
   const statusSelect = document.getElementById("statusOptions");
+
   animeInput.value = data[index].anime;
   seasonSelect.value = data[index].season;
   yearSelect.value = data[index].year;
   statusSelect.value = data[index].status;
+
   const bodyContainer = document.querySelector(".body-container");
   bodyContainer.style.display = "block";
-  const editDataBtn = document.getElementById("addData");
+
+  const addDataBtn = document.getElementById("addData");
+  const editDataBtn = document.createElement("button");
   editDataBtn.textContent = "Save Changes";
-  editDataBtn.removeEventListener("click", addData);
+  addDataBtn.parentNode.replaceChild(editDataBtn, addDataBtn);
+
   editDataBtn.addEventListener("click", async () => {
     try {
       const updatedData = {
@@ -218,6 +223,10 @@ function editData(index) {
       }
       data[index] = updatedData;
       showData();
+      editDataBtn.parentNode.replaceChild(addDataBtn, editDataBtn);
+      addDataBtn.textContent = "Add Data";
+      addDataBtn.removeEventListener("click", editData);
+      addDataBtn.addEventListener("click", addData);
     } catch (error) {
       console.error(error);
     }
