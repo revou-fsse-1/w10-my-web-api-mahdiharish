@@ -127,7 +127,17 @@ async function showData() {
       row += "<td>" + data[i].status + "</td>";
       row +=
         "<td><button class='edit' type='button' onclick='editData(" +
-        i +
+        '"' +
+        data[i].id +
+        '", "' +
+        data[i].anime +
+        '", "' +
+        data[i].season +
+        '", "' +
+        data[i].year +
+        '", "' +
+        data[i].status +
+        '"' +
         ")'>Edit</button>";
       row +=
         "<button class='delete' type='button' onclick='deleteData(" +
@@ -181,16 +191,16 @@ async function addData() {
 document.getElementById("addData").addEventListener("click", addData);
 
 // EDIT DATA
-function editData(index) {
+function editData(id, anime, season, year, status) {
   const animeInput = document.getElementById("inputTitle");
   const seasonSelect = document.getElementById("seasonOptions");
   const yearSelect = document.getElementById("yearSelect");
   const statusSelect = document.getElementById("statusOptions");
 
-  animeInput.value = data[index].anime;
-  seasonSelect.value = data[index].season;
-  yearSelect.value = data[index].year;
-  statusSelect.value = data[index].status;
+  animeInput.value = anime;
+  seasonSelect.value = season;
+  yearSelect.value = year;
+  statusSelect.value = status;
 
   const bodyContainer = document.querySelector(".body-container");
   bodyContainer.style.display = "block";
@@ -209,7 +219,7 @@ function editData(index) {
         status: statusSelect.value,
       };
       const response = await fetch(
-        `https://642433294740174043359209.mockapi.io/animedb/${data[index].id}`,
+        `https://642433294740174043359209.mockapi.io/animedb/${id}`,
         {
           method: "PUT",
           headers: {
