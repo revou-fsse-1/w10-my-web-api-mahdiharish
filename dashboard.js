@@ -231,12 +231,11 @@ function editData(id, anime, season, year, status) {
       if (!response.ok) {
         throw new Error("Failed to update data.");
       }
-      data[index] = updatedData;
-      showData();
       editDataBtn.parentNode.replaceChild(addDataBtn, editDataBtn);
       addDataBtn.textContent = "Add Data";
       addDataBtn.removeEventListener("click", editData);
       addDataBtn.addEventListener("click", addData);
+      showData();
     } catch (error) {
       console.error(error);
     }
